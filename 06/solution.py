@@ -1,12 +1,11 @@
-with open('input.txt') as input_file:
-    lines = [line.rstrip() for line in input_file]
+line = open('input.txt').read()
 
 
 def get_marker(size):
-    for line in lines:
-        for i in range(len(line)):
-            if len(set(line[i:i + size])) == size:
-                return i + size
+    for i in range(len(line)):
+        if len(set(line[i:i + size])) == size:
+            return i + size
+    return None
 
 
 print(get_marker(4))
