@@ -10,9 +10,9 @@ def check_order(packet_a, packet_b):
         try:
             if type(packet_a[i]) is int and type(packet_b[i]) is int:
                 if packet_a[i] < packet_b[i]:
-                    return 1
-                elif packet_a[i] > packet_b[i]:
                     return -1
+                elif packet_a[i] > packet_b[i]:
+                    return 1
             elif type(packet_a[i]) is list and type(packet_b[i]) is list:
                 check = check_order(packet_a[i], packet_b[i])
                 if check != 0:
@@ -24,29 +24,26 @@ def check_order(packet_a, packet_b):
                 if check != 0:
                     return check
         except IndexError:
-            return -1
+            return 1
 
     if len(packet_a) < len(packet_b):
-        return 1
+        return -1
     else:
         return 0
 
 
-packet_pairs = list()
-for i in range(0, len(lines), 3):
-    packet_pairs.append((ast.literal_eval(lines[i]), ast.literal_eval(lines[i + 1])))
+packets = list()
+for line in lines:
+    if line != '':
+        packets.append(ast.literal_eval(line))
 
 checked = list()
-for i in range(len(packet_pairs)):
-    if check_order(packet_pairs[i][0], packet_pairs[i][1]) == 1:
-        checked.append(i + 1)
+for i in range(0, len(packets), 2):
+    if check_order(packets[i], packets[i + 1]) == -1:
+        checked.append(i // 2 + 1)
 
-packets = [[[2]], [[6]]]
-for packet_pair in packet_pairs:
-    packets.append(packet_pair[0])
-    packets.append(packet_pair[1])
-
-packets.sort(key=functools.cmp_to_key(check_order), reverse=True)
+packets += [[[2]], [[6]]]
+packets.sort(key=functools.cmp_to_key(check_order))
 
 print(sum(checked))
 print((packets.index([[2]]) + 1) * (packets.index([[6]]) + 1))
